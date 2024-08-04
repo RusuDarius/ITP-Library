@@ -19,9 +19,21 @@ namespace ITPLibrary.Data.Repositories
             return await _context.Books.ToListAsync();
         }
 
+        public async Task<Book> GetBookByIdAsync(int bookId)
+        {
+            return await _context.Books.FindAsync(bookId);
+        }
+
         public async Task<Book> AddBookAsync(Book book)
         {
             _context.Books.Add(book);
+            await _context.SaveChangesAsync();
+            return book;
+        }
+
+        public async Task<Book> UpdateBookAsync(Book book)
+        {
+            _context.Entry(book).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             return book;
         }
@@ -36,18 +48,6 @@ namespace ITPLibrary.Data.Repositories
             _context.Books.Remove(book);
             await _context.SaveChangesAsync();
             return true;
-        }
-
-        public async Task<Book> GetBookByIdAsync(int bookId)
-        {
-            return await _context.Books.FindAsync(bookId);
-        }
-
-        public async Task<Book> UpdateBookAsync(Book book)
-        {
-            _context.Entry(book).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-            return book;
         }
     }
 }
