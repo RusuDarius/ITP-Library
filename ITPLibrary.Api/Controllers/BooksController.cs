@@ -25,6 +25,13 @@ namespace ITPLibrary.Api.Controllers
             return Ok(books);
         }
 
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<BookDto>>> GetPopularBooks()
+        {
+            var books = await _bookService.GetPopularBooksAsync();
+            return Ok(books);
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<BookDto>> GetBookById(int id)
         {
