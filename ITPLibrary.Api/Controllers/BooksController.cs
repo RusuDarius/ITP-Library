@@ -25,7 +25,7 @@ namespace ITPLibrary.Api.Controllers
             return Ok(books);
         }
 
-        [HttpGet]
+        [HttpGet("/popular-books")]
         public async Task<ActionResult<IEnumerable<BookDto>>> GetPopularBooks()
         {
             var books = await _bookService.GetPopularBooksAsync();
