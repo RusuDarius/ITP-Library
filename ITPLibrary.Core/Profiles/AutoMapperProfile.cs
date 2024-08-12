@@ -1,5 +1,6 @@
 using AutoMapper;
 using ITPLibrary.Core.Dtos.BookDtos;
+using ITPLibrary.Core.Dtos.UserDtos;
 using ITPLibrary.Data.Entities;
 
 namespace ITPLibrary.Core.Profiles
@@ -10,6 +11,8 @@ namespace ITPLibrary.Core.Profiles
         {
             CreateMap<Book, BookDto>().ReverseMap();
             CreateMap<Book, CreateBookDto>().ReverseMap();
+            CreateMap<User, UserDto>().ReverseMap();
+            CreateMap<User, RegisterUserDto>().ReverseMap();
         }
     }
 }
