@@ -1,5 +1,6 @@
 using ITPLibrary.Core.Dtos.UserDtos;
 using ITPLibrary.Core.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ITPLibrary.Api.Controllers
@@ -16,6 +17,7 @@ namespace ITPLibrary.Api.Controllers
         }
 
         [HttpPost("register")]
+        [AllowAnonymous]
         public async Task<IActionResult> RegisterUser([FromBody] RegisterUserDto registerUserDto)
         {
             if (!ModelState.IsValid)
@@ -30,6 +32,23 @@ namespace ITPLibrary.Api.Controllers
             }
 
             return CreatedAtAction(nameof(RegisterUser), new { id = user.Id }, user);
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> LoginUser([FromBody] LoginRequestDto loginRequestDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            var (response, errorMessage) = await _userService.LoginAsync(loginRequestDto);
+            if (response == null)
+            {
+                return Unauthorized(new { message = errorMessage });
+            }
+
+            return Ok(response);
         }
     }
 }

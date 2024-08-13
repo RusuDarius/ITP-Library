@@ -11,11 +11,13 @@ namespace ITPLibrary.Core.Services
     {
         private readonly IMapper _mapper;
         private readonly IUserRepository _userRepository;
+        private readonly string _jwtSecret;
 
-        public UserService(IMapper mapper, IUserRepository userRepository)
+        public UserService(IMapper mapper, IUserRepository userRepository, string jwtSecret)
         {
             _userRepository = userRepository;
             _mapper = mapper;
+            _jwtSecret = jwtSecret;
         }
 
         public async Task<(UserDto user, string errorMessage)> RegisterUserAsync(
@@ -37,6 +39,26 @@ namespace ITPLibrary.Core.Services
 
             user = await _userRepository.RegisterUserAsync(user);
             return (_mapper.Map<UserDto>(user), null);
+        }
+
+        public async Task<(LoginResponseDto response, string errorMessage)> LoginAsync(
+            LoginRequestDto loginRequestDto
+        )
+        {
+            var user = await _userRepository.GetUserByEmailAsync(loginRequestDto.Email);
+            if (user == null)
+            {
+                return (null, "Invalid credentials")!;
+            }
+
+            var hashedPassword = PasswordHasher.HashPassword(loginRequestDto.Password);
+            if (user.Password != hashedPassword)
+            {
+                return (null, "Invalid credentials");
+            }
+
+            var token = JwtTokenGenerator.GenerateJwtToken(user, _jwtSecret);
+            return (new LoginResponseDto { AccessToken = token }, null);
         }
 
         public async Task<bool> UserExistsAsync(string email)

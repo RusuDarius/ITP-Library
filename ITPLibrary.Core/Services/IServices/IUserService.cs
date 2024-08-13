@@ -8,5 +8,8 @@ namespace ITPLibrary.Core.Services.IServices
             RegisterUserDto registerUserDto
         );
         Task<bool> UserExistsAsync(string email);
+        Task<(LoginResponseDto response, string errorMessage)> LoginAsync(
+            LoginRequestDto loginRequestDto
+        );
     }
 }
