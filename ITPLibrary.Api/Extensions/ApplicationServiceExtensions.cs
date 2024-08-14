@@ -35,7 +35,7 @@ namespace ITPLibrary.Api.Extensions
             services.AddScoped<IBookRepository, BookRepository>();
             services.AddScoped<IBookService, BookService>();
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IUserService, UserService>();
+            // services.AddScoped<IUserService, UserService>();
 
             return services;
         }
