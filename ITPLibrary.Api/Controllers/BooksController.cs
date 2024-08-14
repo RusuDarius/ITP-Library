@@ -1,6 +1,6 @@
+using ITPLibrary.Api.Constants;
 using ITPLibrary.Core.Dtos.BookDtos;
 using ITPLibrary.Core.Services.IServices;
-using ITPLibrary.Data.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ITPLibrary.Api.Controllers
@@ -25,7 +25,7 @@ namespace ITPLibrary.Api.Controllers
             return Ok(books);
         }
 
-        [HttpGet("/popular-books")]
+        [HttpGet($"{RouteConstants.Popular}")]
         public async Task<ActionResult<IEnumerable<BookDto>>> GetPopularBooks()
         {
             var books = await _bookService.GetPopularBooksAsync();

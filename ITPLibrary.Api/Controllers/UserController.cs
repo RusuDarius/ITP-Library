@@ -1,3 +1,4 @@
+using ITPLibrary.Api.Constants;
 using ITPLibrary.Core.Dtos.UserDtos;
 using ITPLibrary.Core.Services.IServices;
 using Microsoft.AspNetCore.Authorization;
@@ -16,7 +17,7 @@ namespace ITPLibrary.Api.Controllers
             _userService = userService;
         }
 
-        [HttpPost("register")]
+        [HttpPost($"{RouteConstants.Register}")]
         [AllowAnonymous]
         public async Task<IActionResult> RegisterUser([FromBody] RegisterUserDto registerUserDto)
         {
@@ -34,7 +35,7 @@ namespace ITPLibrary.Api.Controllers
             return CreatedAtAction(nameof(RegisterUser), new { id = user.Id }, user);
         }
 
-        [HttpPost("login")]
+        [HttpPost($"{RouteConstants.Login}")]
         public async Task<IActionResult> LoginUser([FromBody] LoginRequestDto loginRequestDto)
         {
             if (!ModelState.IsValid)
