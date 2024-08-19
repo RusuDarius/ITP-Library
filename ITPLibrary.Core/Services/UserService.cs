@@ -35,7 +35,8 @@ namespace ITPLibrary.Core.Services
             }
 
             var user = _mapper.Map<User>(registerUserDto);
-            user.Password = PasswordHasher.HashPassword(registerUserDto.Password);
+            user.Password = PasswordHasher.HashPassword(registerUserDto.Password, out string salt);
+            user.Salt = salt;
 
             user = await _userRepository.RegisterUserAsync(user);
             return (_mapper.Map<UserDto>(user), null);
@@ -51,8 +52,7 @@ namespace ITPLibrary.Core.Services
                 return (null, "Invalid credentials")!;
             }
 
-            var hashedPassword = PasswordHasher.HashPassword(loginRequestDto.Password);
-            if (user.Password != hashedPassword)
+            if (!PasswordHasher.VerifyPassword(loginRequestDto.Password, user.Password, user.Salt))
             {
                 return (null, "Invalid credentials");
             }
