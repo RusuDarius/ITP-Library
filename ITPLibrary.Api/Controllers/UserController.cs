@@ -51,5 +51,25 @@ namespace ITPLibrary.Api.Controllers
 
             return Ok(response);
         }
+
+        [HttpPost($"{RouteConstants.Recovery}")]
+        public async Task<IActionResult> PasswordRecovery(PasswordRecoveryDto passwordRecoveryDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var (success, errorMessage) = await _userService.RecoverPasswordAsync(
+                passwordRecoveryDto
+            );
+
+            if (!success)
+            {
+                return NotFound(new { message = errorMessage });
+            }
+
+            return Ok(new { message = "Password recovery email sent successfully." });
+        }
     }
 }

@@ -22,7 +22,18 @@ namespace ITPLibrary.Api.Extensions
                     new UserService(
                         provider.GetRequiredService<IMapper>(),
                         provider.GetRequiredService<IUserRepository>(),
-                        jwtSecret!
+                        jwtSecret!,
+                        provider.GetRequiredService<IEmailService>()
+                    )
+            );
+
+            services.AddScoped<IEmailService, EmailService>(
+                provider =>
+                    new EmailService(
+                        config["EmailSettings:SmtpServer"],
+                        int.Parse(config["EmailSettings:SmtpPort"]),
+                        config["EmailSettings:FromEmail"],
+                        config["EmailSettings:FromPassword"]
                     )
             );
 

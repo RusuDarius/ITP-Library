@@ -5,5 +5,6 @@ namespace ITPLibrary.Api.Constants
         public const string Popular = "popular-books";
         public const string Login = "login";
         public const string Register = "register";
+        public const string Recovery = "password-recovery";
     }
 }

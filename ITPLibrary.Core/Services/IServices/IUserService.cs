@@ -11,5 +11,8 @@ namespace ITPLibrary.Core.Services.IServices
         Task<(LoginResponseDto response, string errorMessage)> LoginAsync(
             LoginRequestDto loginRequestDto
         );
+        Task<(bool success, string errorMessage)> RecoverPasswordAsync(
+            PasswordRecoveryDto passwordRecoveryDto
+        );
     }
 }

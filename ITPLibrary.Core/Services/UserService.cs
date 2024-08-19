@@ -12,9 +12,16 @@ namespace ITPLibrary.Core.Services
         private readonly IMapper _mapper;
         private readonly IUserRepository _userRepository;
         private readonly string _jwtSecret;
+        private readonly IEmailService _emailService;
 
-        public UserService(IMapper mapper, IUserRepository userRepository, string jwtSecret)
+        public UserService(
+            IMapper mapper,
+            IUserRepository userRepository,
+            string jwtSecret,
+            IEmailService emailService
+        )
         {
+            _emailService = emailService;
             _userRepository = userRepository;
             _mapper = mapper;
             _jwtSecret = jwtSecret;
@@ -64,6 +71,26 @@ namespace ITPLibrary.Core.Services
         public async Task<bool> UserExistsAsync(string email)
         {
             return await _userRepository.UserExistsAsync(email);
+        }
+
+        public async Task<(bool success, string errorMessage)> RecoverPasswordAsync(
+            PasswordRecoveryDto passwordRecoveryDto
+        )
+        {
+            var user = await _userRepository.GetUserByEmailAsync(passwordRecoveryDto.Email);
+            if (user == null)
+            {
+                return (false, "User was not found");
+            }
+
+            //! Maybe send reset link with token instead of password?
+            await _emailService.SendEmailAsync(
+                user.Email,
+                "Password Recovery",
+                $"Your password is: {user.Password}"
+            );
+
+            return (true, null);
         }
     }
 }
