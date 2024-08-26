@@ -8,6 +8,7 @@ namespace ITPLibrary.Core.Dtos.BookDtos
         public int Id { get; set; }
 
         [Required]
+        [MaxLength(100)]
         public string Title { get; set; }
 
         [MaxLength(500)]

@@ -14,9 +14,14 @@ namespace ITPLibrary.Data.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Book>> GetAllBooksAsync()
+        public async Task<IEnumerable<Book>> GetPopularAndRecentlyAddedBooksAsync()
         {
-            return await _context.Books.ToListAsync();
+            //* Added in the last 30 days
+            var recentDateThreshold = DateTime.UtcNow.AddDays(-30);
+
+            return await _context.Books
+                .Where(b => b.IsPopular || b.AddedDateTime >= recentDateThreshold)
+                .ToListAsync();
         }
 
         public async Task<Book> GetBookByIdAsync(int bookId)

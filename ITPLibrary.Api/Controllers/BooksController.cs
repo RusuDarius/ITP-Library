@@ -19,9 +19,9 @@ namespace ITPLibrary.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<BookDto>>> GetAllBooks()
+        public async Task<ActionResult<IEnumerable<PopularAndRecentlyAddedBooksDto>>> GetAllBooks()
         {
-            var books = await _bookService.GetAllBooksAsync();
+            var books = await _bookService.GetPopularAndRecentlyAddedBooksAsync();
             return Ok(books);
         }
 

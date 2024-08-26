@@ -4,7 +4,7 @@ namespace ITPLibrary.Core.Services.IServices
 {
     public interface IBookService
     {
-        Task<IEnumerable<BookDto>> GetAllBooksAsync();
+        Task<IEnumerable<PopularAndRecentlyAddedBooksDto>> GetPopularAndRecentlyAddedBooksAsync();
         Task<IEnumerable<BookDto>> GetPopularBooksAsync();
         Task<IEnumerable<PromotedBookDto>> GetPromotedBooksAsync();
         Task<BookDto> GetBookByIdAsync(int bookId);

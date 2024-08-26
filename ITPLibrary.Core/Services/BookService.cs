@@ -17,10 +17,12 @@ namespace ITPLibrary.Core.Services
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<BookDto>> GetAllBooksAsync()
+        public async Task<
+            IEnumerable<PopularAndRecentlyAddedBooksDto>
+        > GetPopularAndRecentlyAddedBooksAsync()
         {
-            var books = await _bookRepository.GetAllBooksAsync();
-            return _mapper.Map<IEnumerable<BookDto>>(books);
+            var books = await _bookRepository.GetPopularAndRecentlyAddedBooksAsync();
+            return _mapper.Map<IEnumerable<PopularAndRecentlyAddedBooksDto>>(books);
         }
 
         public async Task<BookDto> GetBookByIdAsync(int bookId)

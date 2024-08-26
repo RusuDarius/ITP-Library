@@ -4,7 +4,7 @@ namespace ITPLibrary.Data.Repositories.IRepositories
 {
     public interface IBookRepository
     {
-        Task<IEnumerable<Book>> GetAllBooksAsync();
+        Task<IEnumerable<Book>> GetPopularAndRecentlyAddedBooksAsync();
         Task<IEnumerable<Book>> GetPopularBooks();
         Task<IEnumerable<Book>> GetPromotedBooksAsync();
         Task<Book> GetBookByIdAsync(int bookId);
