@@ -1,4 +1,5 @@
 using ITPLibrary.Api.Constants;
+using ITPLibrary.Core.Dtos.BookDetailsDtos;
 using ITPLibrary.Core.Dtos.BookDtos;
 using ITPLibrary.Core.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
@@ -45,7 +46,19 @@ namespace ITPLibrary.Api.Controllers
             var book = await _bookService.GetBookByIdAsync(id);
             if (book == null)
             {
-                return NotFound();
+                return NotFound("Book was not found");
+            }
+            return Ok(book);
+        }
+
+        [HttpGet($"{RouteConstants.Details}")]
+        public async Task<ActionResult<BookDetailsDto>> GetBookDetails(int id)
+        {
+            var book = await _bookService.GetBookDetailsAsync(id);
+
+            if (book == null)
+            {
+                return NotFound("Book was not found");
             }
             return Ok(book);
         }

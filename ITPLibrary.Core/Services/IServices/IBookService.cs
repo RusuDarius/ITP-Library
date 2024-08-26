@@ -1,3 +1,4 @@
+using ITPLibrary.Core.Dtos.BookDetailsDtos;
 using ITPLibrary.Core.Dtos.BookDtos;
 
 namespace ITPLibrary.Core.Services.IServices
@@ -7,6 +8,7 @@ namespace ITPLibrary.Core.Services.IServices
         Task<IEnumerable<PopularAndRecentlyAddedBooksDto>> GetPopularAndRecentlyAddedBooksAsync();
         Task<IEnumerable<BookDto>> GetPopularBooksAsync();
         Task<IEnumerable<PromotedBookDto>> GetPromotedBooksAsync();
+        Task<BookDetailsDto> GetBookDetailsAsync(int bookId);
         Task<BookDto> GetBookByIdAsync(int bookId);
         Task<BookDto> AddBookAsync(CreateBookDto createBookDto);
         Task<BookDto> UpdateBookAsync(int bookId, CreateBookDto createBookDto);

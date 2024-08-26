@@ -6,6 +6,7 @@ namespace ITPLibrary.Data.Repositories.IRepositories
     {
         Task<IEnumerable<Book>> GetPopularAndRecentlyAddedBooksAsync();
         Task<IEnumerable<Book>> GetPopularBooks();
+        Task<Book> GetBookDetailsAsync(int bookId);
         Task<IEnumerable<Book>> GetPromotedBooksAsync();
         Task<Book> GetBookByIdAsync(int bookId);
         Task<Book> AddBookAsync(Book book);

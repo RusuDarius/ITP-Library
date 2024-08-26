@@ -1,4 +1,5 @@
 using AutoMapper;
+using ITPLibrary.Core.Dtos.BookDetailsDtos;
 using ITPLibrary.Core.Dtos.BookDtos;
 using ITPLibrary.Core.Services.IServices;
 using ITPLibrary.Data.Entities;
@@ -29,6 +30,12 @@ namespace ITPLibrary.Core.Services
         {
             var book = await _bookRepository.GetBookByIdAsync(bookId);
             return _mapper.Map<BookDto>(book);
+        }
+
+        public async Task<BookDetailsDto> GetBookDetailsAsync(int bookId)
+        {
+            var book = await _bookRepository.GetBookDetailsAsync(bookId);
+            return _mapper.Map<BookDetailsDto>(book);
         }
 
         public async Task<IEnumerable<BookDto>> GetPopularBooksAsync()

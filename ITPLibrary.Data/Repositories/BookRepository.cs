@@ -39,6 +39,13 @@ namespace ITPLibrary.Data.Repositories
             return await _context.Books.Where(b => b.IsPromoted).ToListAsync();
         }
 
+        public async Task<Book> GetBookDetailsAsync(int bookId)
+        {
+            return await _context.Books
+                .Include(b => b.BookDetails)
+                .FirstOrDefaultAsync(b => b.BookId == bookId);
+        }
+
         public async Task<Book> AddBookAsync(Book book)
         {
             _context.Books.Add(book);
