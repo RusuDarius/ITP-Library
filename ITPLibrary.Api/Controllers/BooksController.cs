@@ -32,6 +32,13 @@ namespace ITPLibrary.Api.Controllers
             return Ok(books);
         }
 
+        [HttpGet($"{RouteConstants.Promoted}")]
+        public async Task<ActionResult<IEnumerable<PromotedBookDto>>> GetPromotedBooks()
+        {
+            var promotedBooks = await _bookService.GetPromotedBooksAsync();
+            return Ok(promotedBooks);
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<BookDto>> GetBookById(int id)
         {

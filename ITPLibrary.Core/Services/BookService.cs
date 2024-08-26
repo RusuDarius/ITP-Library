@@ -35,6 +35,12 @@ namespace ITPLibrary.Core.Services
             return _mapper.Map<IEnumerable<BookDto>>(books);
         }
 
+        public async Task<IEnumerable<PromotedBookDto>> GetPromotedBooksAsync()
+        {
+            var promotedBooks = await _bookRepository.GetPromotedBooksAsync();
+            return _mapper.Map<IEnumerable<PromotedBookDto>>(promotedBooks);
+        }
+
         public async Task<BookDto> AddBookAsync(CreateBookDto createBookDto)
         {
             var book = _mapper.Map<Book>(createBookDto);

@@ -11,6 +11,7 @@ namespace ITPLibrary.Core.Profiles
         {
             CreateMap<Book, BookDto>().ReverseMap();
             CreateMap<Book, CreateBookDto>().ReverseMap();
+            CreateMap<Book, PromotedBookDto>().ReverseMap();
             CreateMap<User, UserDto>().ReverseMap();
             CreateMap<User, RegisterUserDto>().ReverseMap();
         }

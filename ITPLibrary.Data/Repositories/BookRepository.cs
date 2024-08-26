@@ -29,6 +29,11 @@ namespace ITPLibrary.Data.Repositories
             return await _context.Books.Where(b => b.IsPopular).ToListAsync();
         }
 
+        public async Task<IEnumerable<Book>> GetPromotedBooksAsync()
+        {
+            return await _context.Books.Where(b => b.IsPromoted).ToListAsync();
+        }
+
         public async Task<Book> AddBookAsync(Book book)
         {
             _context.Books.Add(book);
