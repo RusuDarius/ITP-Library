@@ -13,5 +13,6 @@ namespace ITPLibrary.Data.Entities
         public DateTimeOffset AddedDateTime { get; set; }
         public bool IsPopular { get; set; } = false;
         public bool IsPromoted { get; set; } = false;
+        public BookDetails? BookDetails { get; set; }
     }
 }
