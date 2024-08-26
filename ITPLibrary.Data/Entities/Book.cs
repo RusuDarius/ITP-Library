@@ -9,7 +9,7 @@ namespace ITPLibrary.Data.Entities
         public string Title { get; set; }
         public string Author { get; set; }
         public int Price { get; set; }
-        public byte[]? Thumbnail { get; set; }
+        public string? Thumbnail { get; set; }
         public DateTimeOffset AddedDateTime { get; set; }
         public bool IsPopular { get; set; } = false;
         public bool IsPromoted { get; set; } = false;
