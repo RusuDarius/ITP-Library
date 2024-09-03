@@ -29,19 +29,19 @@ namespace ITPLibrary.Core.Services
 
         public async Task<bool> DeleteItemFromCartAsync(int userId, int bookId)
         {
-            var bookQuantity = await _shoppingCartRepository.GetItemQuantityAsync(userId, bookId);
+            var itemQuantity = await _shoppingCartRepository.GetItemQuantityAsync(userId, bookId);
 
-            if (bookQuantity == 0)
+            if (itemQuantity == 0)
             {
                 return false;
             }
 
-            if (bookQuantity == 1)
+            if (itemQuantity == 1)
             {
                 await _shoppingCartRepository.DeleteItemFromCartAsync(userId, bookId);
             }
 
-            if (bookQuantity > 1)
+            if (itemQuantity > 1)
             {
                 await _shoppingCartRepository.DecrementItemQuantityInCartAsync(userId, bookId);
             }
