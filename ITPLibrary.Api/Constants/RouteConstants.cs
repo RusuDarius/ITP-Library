@@ -8,7 +8,6 @@ namespace ITPLibrary.Api.Constants
         public const string Details = "book-details";
         #endregion
 
-
         #region
         public const string Login = "login";
         public const string Register = "register";
