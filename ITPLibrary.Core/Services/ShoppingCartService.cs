@@ -1,6 +1,7 @@
 using AutoMapper;
 using ITPLibrary.Core.Dtos.BookDtos;
 using ITPLibrary.Core.Services.IServices;
+using ITPLibrary.Data.Entities;
 using ITPLibrary.Data.Repositories.IRepositories;
 
 namespace ITPLibrary.Core.Services
@@ -22,9 +23,36 @@ namespace ITPLibrary.Core.Services
             _bookRepository = bookRepository;
         }
 
-        public Task<bool> AddItemToShoppingCartAsync(int userId, int bookId)
+        public async Task<bool> AddItemToShoppingCartAsync(int userId, int bookId)
         {
-            throw new NotImplementedException();
+            if (await _bookRepository.GetBookByIdAsync(bookId) == null)
+            {
+                return false;
+            }
+
+            var itemInCart = await _shoppingCartRepository.GetShoppingCartItemAsync(userId, bookId);
+
+            if (itemInCart == null)
+            {
+                ShoppingCart newItemInCart = new ShoppingCart()
+                {
+                    BookId = bookId,
+                    UserId = userId,
+                    Quantity = 1
+                };
+
+                await _shoppingCartRepository.AddItemToShoppingCartAsync(newItemInCart);
+            }
+            else
+            {
+                var incrementQty = await _shoppingCartRepository.IncrementItemQuantityInCartAsync(
+                    userId,
+                    bookId
+                );
+                return incrementQty;
+            }
+
+            return true;
         }
 
         public async Task<bool> DeleteItemFromCartAsync(int userId, int bookId)
@@ -49,9 +77,25 @@ namespace ITPLibrary.Core.Services
             return true;
         }
 
-        public Task<IEnumerable<BookDisplayInShoppingCartDto>> GetShoppingCart(int userId)
+        public async Task<IEnumerable<BookDisplayInShoppingCartDto>> GetShoppingCartAsync(
+            int userId
+        )
         {
-            throw new NotImplementedException();
+            var shoppingCart = await _shoppingCartRepository.GetUserShoppingcartItemsAsync(userId);
+            List<BookDisplayInShoppingCartDto> shoppingCartBooks =
+                new List<BookDisplayInShoppingCartDto>();
+
+            foreach (var shoppingCartItem in shoppingCart)
+            {
+                var currentBook = _mapper.Map<BookDisplayInShoppingCartDto>(
+                    await _bookRepository.GetBookByIdAsync(shoppingCartItem.BookId)
+                );
+
+                currentBook.Quantity = shoppingCartItem.Quantity;
+                shoppingCartBooks.Add(currentBook);
+            }
+
+            return shoppingCartBooks;
         }
     }
 }

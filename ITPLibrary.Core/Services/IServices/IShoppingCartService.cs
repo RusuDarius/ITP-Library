@@ -6,6 +6,6 @@ namespace ITPLibrary.Core.Services.IServices
     {
         Task<bool> DeleteItemFromCartAsync(int userId, int bookId);
         Task<bool> AddItemToShoppingCartAsync(int userId, int bookId);
-        Task<IEnumerable<BookDisplayInShoppingCartDto>> GetShoppingCart(int userId);
+        Task<IEnumerable<BookDisplayInShoppingCartDto>> GetShoppingCartAsync(int userId);
     }
 }

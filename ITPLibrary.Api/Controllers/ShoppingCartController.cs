@@ -1,26 +1,60 @@
+using ITPLibrary.Api.Common;
+using ITPLibrary.Api.Constants;
+using ITPLibrary.Core.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ITPLibrary.Api.Controllers
 {
     [Route("[controller]")]
-    public class ShoppingCartController : Controller
+    [ApiController]
+    [Authorize]
+    public class ShoppingCartController : ControllerBase
     {
-        private readonly ILogger<ShoppingCartController> _logger;
+        private readonly IShoppingCartService _shoppingCartService;
 
-        public ShoppingCartController(ILogger<ShoppingCartController> logger)
+        public ShoppingCartController(IShoppingCartService shoppingCartService)
         {
-            _logger = logger;
+            _shoppingCartService = shoppingCartService;
         }
 
-        public IActionResult Index()
+        [HttpGet($"{RouteConstants.GetShoppingCart}")]
+        public async Task<IActionResult> GetShoppingCart()
         {
-            return View();
+            var shoppingCart = await _shoppingCartService.GetShoppingCartAsync(
+                CommonMethods.GetUserIdFromContext(HttpContext)
+            );
+            return Ok(shoppingCart);
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        [HttpPost($"{RouteConstants.AddShoppingCartItem}/{{bookId}}")]
+        public async Task<ActionResult> AddShoppingCartItemAsync([FromRoute] int bookId)
         {
-            return View("Error!");
+            var response = await _shoppingCartService.AddItemToShoppingCartAsync(
+                CommonMethods.GetUserIdFromContext(HttpContext),
+                bookId
+            );
+
+            if (response == false)
+            {
+                return BadRequest("Failed to add item in shopping cart");
+            }
+            return Ok("Item added to cart successfully");
+        }
+
+        [HttpDelete($"{RouteConstants.DeleteShoppingCartItem}/{{bookId}}")]
+        public async Task<IActionResult> DeleteItemFromCartAsync([FromRoute] int bookId)
+        {
+            var response = await _shoppingCartService.DeleteItemFromCartAsync(
+                CommonMethods.GetUserIdFromContext(HttpContext),
+                bookId
+            );
+
+            if (response == false)
+            {
+                return BadRequest("Failed to delete item from shopping cart");
+            }
+            return Ok("Item deleted successfully");
         }
     }
 }
