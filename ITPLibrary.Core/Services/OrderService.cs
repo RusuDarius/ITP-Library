@@ -129,24 +129,24 @@ namespace ITPLibrary.Core.Services
             return orderItem;
         }
 
-        private async Task<Order> UpdateNewOrder(UpdateOrderDto updatedOrder, Order unchangedOrder)
+        private async Task<Order> UpdateNewOrder(UpdateOrderDto newOrder, Order originalOrder)
         {
-            if (updatedOrder.BillingAddress != null)
+            if (newOrder.BillingAddress != null)
             {
-                await UpdateBillingAddress(unchangedOrder, updatedOrder.BillingAddress);
+                await UpdateBillingAddress(originalOrder, newOrder.BillingAddress);
             }
 
-            if (updatedOrder.AdditionalInformation != null)
+            if (newOrder.AdditionalInformation != null)
             {
-                unchangedOrder.AdditionalInformation = updatedOrder.AdditionalInformation;
+                originalOrder.AdditionalInformation = newOrder.AdditionalInformation;
             }
 
-            if (updatedOrder.PaymentType != null)
+            if (newOrder.PaymentType != null)
             {
-                unchangedOrder.PaymentTypeId = (int)updatedOrder.PaymentType;
+                originalOrder.PaymentTypeId = (int)newOrder.PaymentType;
             }
 
-            return unchangedOrder;
+            return originalOrder;
         }
 
         private async Task UpdateBillingAddress(Order order, AddressDto newAddress)
@@ -159,34 +159,34 @@ namespace ITPLibrary.Core.Services
         }
 
         private async Task<Order> UpdateProcessingOrder(
-            UpdateOrderDto updatedOrder,
-            Order unchangedOrder
+            UpdateOrderDto newOrder,
+            Order originalOrder
         )
         {
-            if (updatedOrder.AdditionalInformation != null)
+            if (newOrder.AdditionalInformation != null)
             {
-                unchangedOrder.AdditionalInformation = updatedOrder.AdditionalInformation;
+                originalOrder.AdditionalInformation = newOrder.AdditionalInformation;
             }
 
-            if (updatedOrder.PaymentType != null)
+            if (newOrder.PaymentType != null)
             {
-                unchangedOrder.PaymentTypeId = (int)updatedOrder.PaymentType;
+                originalOrder.PaymentTypeId = (int)newOrder.PaymentType;
             }
 
-            return unchangedOrder;
+            return originalOrder;
         }
 
         private async Task<Order> UpdateDispatchedOrder(
-            UpdateOrderDto updatedOrder,
-            Order unchangedOrder
+            UpdateOrderDto newOrder,
+            Order originalOrder
         )
         {
-            if (updatedOrder.AdditionalInformation != null)
+            if (newOrder.AdditionalInformation != null)
             {
-                unchangedOrder.AdditionalInformation = updatedOrder.AdditionalInformation;
+                originalOrder.AdditionalInformation = newOrder.AdditionalInformation;
             }
 
-            return unchangedOrder;
+            return originalOrder;
         }
 
         #endregion
