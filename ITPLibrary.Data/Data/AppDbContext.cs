@@ -16,5 +16,6 @@ namespace Data
         public DbSet<Order> Order { get; set; }
         public DbSet<OrderItem> OrderItem { get; set; }
         public DbSet<OrderStatus> OrderStatus { get; set; }
+        public DbSet<PaymentType> PaymentType { get; set; }
     }
 }

@@ -31,7 +31,7 @@ namespace ITPLibrary.Core.Services
             _userRepository = userRepository;
         }
 
-        public async Task<IEnumerable<OrderDto>> GetAllOrders(int userId)
+        public async Task<IEnumerable<OrderDto>> GetAllOrdersAsync(int userId)
         {
             var orders = await _orderRepository.GetOrdersAsync(userId);
             if (orders == null)
@@ -43,7 +43,7 @@ namespace ITPLibrary.Core.Services
             return mappedOrders;
         }
 
-        public async Task<bool> PostOrder(PostOrderDto newOrder, int userId)
+        public async Task<bool> PostOrderAsync(PostOrderDto newOrder, int userId)
         {
             if (newOrder == null)
             {
@@ -71,9 +71,35 @@ namespace ITPLibrary.Core.Services
             return true;
         }
 
-        public async Task<bool> UpdateOrder(UpdateOrderDto updatedOrder) { }
+        public async Task<bool> UpdateOrderAsync(UpdateOrderDto updatedOrder)
+        {
+            Order unchangedOrder = await _orderRepository.GetOrderAsync(updatedOrder.Id);
 
-        #region
+            if (unchangedOrder == null)
+            {
+                return false;
+            }
+
+            if (unchangedOrder.OrderStatusId == (int)OrderStatusEnum.New)
+            {
+                unchangedOrder = await UpdateNewOrder(updatedOrder, unchangedOrder);
+            }
+
+            if (unchangedOrder.OrderStatusId == (int)OrderStatusEnum.Processing)
+            {
+                unchangedOrder = await UpdateProcessingOrder(updatedOrder, unchangedOrder);
+            }
+
+            if (unchangedOrder.OrderStatusId == (int)OrderStatusEnum.Dispatched)
+            {
+                unchangedOrder = await UpdateDispatchedOrder(updatedOrder, unchangedOrder);
+            }
+
+            await _orderRepository.UpdateOrderAsync(unchangedOrder);
+            return true;
+        }
+
+        #region Private Methods
 
         private static int CalculateOrderPrice(IEnumerable<ShoppingCart> productList)
         {
@@ -101,6 +127,66 @@ namespace ITPLibrary.Core.Services
             var orderItem = _mapper.Map<OrderItem>(item);
             orderItem.OrderId = orderId;
             return orderItem;
+        }
+
+        private async Task<Order> UpdateNewOrder(UpdateOrderDto updatedOrder, Order unchangedOrder)
+        {
+            if (updatedOrder.BillingAddress != null)
+            {
+                await UpdateBillingAddress(unchangedOrder, updatedOrder.BillingAddress);
+            }
+
+            if (updatedOrder.AdditionalInformation != null)
+            {
+                unchangedOrder.AdditionalInformation = updatedOrder.AdditionalInformation;
+            }
+
+            if (updatedOrder.PaymentType != null)
+            {
+                unchangedOrder.PaymentTypeId = (int)updatedOrder.PaymentType;
+            }
+
+            return unchangedOrder;
+        }
+
+        private async Task UpdateBillingAddress(Order order, AddressDto newAddress)
+        {
+            order.BillingAddress.AddressName = newAddress.AddressName;
+            order.BillingAddress.PhoneNumber = newAddress.PhoneNumber;
+            order.BillingAddress.City = newAddress.City;
+
+            await _orderRepository.UpdateAddressAsync(order.BillingAddress);
+        }
+
+        private async Task<Order> UpdateProcessingOrder(
+            UpdateOrderDto updatedOrder,
+            Order unchangedOrder
+        )
+        {
+            if (updatedOrder.AdditionalInformation != null)
+            {
+                unchangedOrder.AdditionalInformation = updatedOrder.AdditionalInformation;
+            }
+
+            if (updatedOrder.PaymentType != null)
+            {
+                unchangedOrder.PaymentTypeId = (int)updatedOrder.PaymentType;
+            }
+
+            return unchangedOrder;
+        }
+
+        private async Task<Order> UpdateDispatchedOrder(
+            UpdateOrderDto updatedOrder,
+            Order unchangedOrder
+        )
+        {
+            if (updatedOrder.AdditionalInformation != null)
+            {
+                unchangedOrder.AdditionalInformation = updatedOrder.AdditionalInformation;
+            }
+
+            return unchangedOrder;
         }
 
         #endregion

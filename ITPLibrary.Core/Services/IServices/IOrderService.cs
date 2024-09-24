@@ -4,8 +4,8 @@ namespace ITPLibrary.Core.Services.IServices
 {
     public interface IOrderService
     {
-        public Task<bool> PostOrder(PostOrderDto newOrder, int userId);
-        public Task<IEnumerable<OrderDto>> GetAllOrders(int userId);
-        public Task<bool> UpdateOrder(UpdateOrderDto updatedOrder);
+        public Task<bool> PostOrderAsync(PostOrderDto newOrder, int userId);
+        public Task<IEnumerable<OrderDto>> GetAllOrdersAsync(int userId);
+        public Task<bool> UpdateOrderAsync(UpdateOrderDto updatedOrder);
     }
 }

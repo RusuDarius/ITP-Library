@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using ITPLibrary.Data.Enums;
 
 namespace ITPLibrary.Core.Dtos.OrderDtos
 {
@@ -8,7 +9,7 @@ namespace ITPLibrary.Core.Dtos.OrderDtos
         public AddressDto BillingAddress { get; set; }
 
         [Required]
-        public string PaymentType { get; set; }
+        public PaymentTypeEnum PaymentType { get; set; }
 
         public DateTimeOffset DeliveryDate { get; set; }
 
