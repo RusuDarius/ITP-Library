@@ -2,10 +2,13 @@ using Data;
 using ITPLibrary.Api.Extensions;
 using ITPLibrary.Core.Profiles;
 using Microsoft.EntityFrameworkCore;
+using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+
+StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
 
 //* Extensions
 builder.Services.AddApplicationServices(builder.Configuration);
