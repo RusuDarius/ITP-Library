@@ -14,13 +14,11 @@ namespace ITPLibrary.Core.Services
         private readonly IOrderRepository _orderRepository;
         private readonly IMapper _mapper;
         private readonly IOrderItemRepository _orderItemRepository;
-        private readonly IUserRepository _userRepository;
 
         public OrderService(
             IShoppingCartRepository shoppingCartRepository,
             IOrderRepository orderRepository,
             OrderItemRepository orderItemRepository,
-            IUserRepository userRepository,
             IMapper mapper
         )
         {
@@ -28,7 +26,6 @@ namespace ITPLibrary.Core.Services
             _orderRepository = orderRepository;
             _mapper = mapper;
             _orderItemRepository = (IOrderItemRepository?)orderItemRepository!;
-            _userRepository = userRepository;
         }
 
         public async Task<IEnumerable<OrderDto>> GetAllOrdersAsync(int userId)
