@@ -24,6 +24,7 @@ namespace ITPLibrary.Api.Constants
         public const string PostOrder = "post-order";
         public const string GetOrders = "get-orders";
         public const string UpdateOrder = "update-order";
+        public const string Checkout = "checkout";
         #endregion
     }
 }

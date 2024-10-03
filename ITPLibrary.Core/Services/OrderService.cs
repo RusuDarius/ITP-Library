@@ -1,10 +1,13 @@
 using AutoMapper;
 using ITPLibrary.Core.Dtos.OrderDtos;
+using ITPLibrary.Core.Dtos.PaymentDtos;
 using ITPLibrary.Core.Services.IServices;
+using ITPLibrary.Core.Utilities;
 using ITPLibrary.Data.Entities;
 using ITPLibrary.Data.Enums;
 using ITPLibrary.Data.Repositories;
 using ITPLibrary.Data.Repositories.IRepositories;
+using Stripe;
 
 namespace ITPLibrary.Core.Services
 {
@@ -13,18 +16,21 @@ namespace ITPLibrary.Core.Services
         private readonly IShoppingCartRepository _shoppingCartRepository;
         private readonly IOrderRepository _orderRepository;
         private readonly IMapper _mapper;
+        private readonly PaymentConfigUtility _stripeConfig;
         private readonly IOrderItemRepository _orderItemRepository;
 
         public OrderService(
             IShoppingCartRepository shoppingCartRepository,
             IOrderRepository orderRepository,
             OrderItemRepository orderItemRepository,
-            IMapper mapper
+            IMapper mapper,
+            PaymentConfigUtility stripe
         )
         {
             _shoppingCartRepository = shoppingCartRepository;
             _orderRepository = orderRepository;
             _mapper = mapper;
+            _stripeConfig = stripe;
             _orderItemRepository = (IOrderItemRepository?)orderItemRepository!;
         }
 
@@ -96,7 +102,60 @@ namespace ITPLibrary.Core.Services
             return true;
         }
 
+        public async Task<Charge> ProcessPayment(CreditCardDto creditCard, int userId)
+        {
+            var shoppingCart = await _shoppingCartRepository.GetUserShoppingcartItemsAsync(userId);
+            if (shoppingCart == null)
+            {
+                return null;
+            }
+
+            TokenCardOptions cardOptions = new TokenCardOptions
+            {
+                Name = creditCard.FirstName + " " + creditCard.LastName,
+                Number = creditCard.CardNumber,
+                ExpYear = creditCard.ExpirationYear.ToString(),
+                ExpMonth = creditCard.ExpirationMonth.ToString(),
+                Cvc = creditCard.CVV2.ToString()
+            };
+
+            TokenCreateOptions tokenOptions = new TokenCreateOptions { Card = cardOptions };
+            TokenService tokenService = new TokenService();
+            Token createdToken = await tokenService.CreateAsync(tokenOptions);
+
+            Customer customer = await CreateCustomer(creditCard.Email, createdToken);
+
+            ChargeService chargeService = new ChargeService();
+            Charge charge = await chargeService.CreateAsync(
+                new ChargeCreateOptions
+                {
+                    Amount = CalculateOrderPrice(shoppingCart),
+                    Currency = "ron",
+                    Source = createdToken.Id,
+                    Customer = customer.Id,
+                    ReceiptEmail = customer.Email
+                }
+            );
+
+            return charge;
+        }
+
         #region Private Methods
+
+        private async Task<Customer> CreateCustomer(string customerEmail, Token token)
+        {
+            CustomerCreateOptions customer = new CustomerCreateOptions()
+            {
+                Email = customerEmail,
+                Source = token.Id,
+                Name = token.Card.Name
+            };
+
+            var customerService = new CustomerService();
+            Customer stripeCustomer = customerService.Create(customer);
+
+            return stripeCustomer;
+        }
 
         private static int CalculateOrderPrice(IEnumerable<ShoppingCart> productList)
         {

@@ -1,6 +1,7 @@
 using ITPLibrary.Api.Common;
 using ITPLibrary.Api.Constants;
 using ITPLibrary.Core.Dtos.OrderDtos;
+using ITPLibrary.Core.Dtos.PaymentDtos;
 using ITPLibrary.Core.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
 
@@ -51,6 +52,20 @@ namespace ITPLibrary.Api.Controllers
                 return BadRequest();
             }
             return Ok();
+        }
+
+        [HttpPost(RouteConstants.Checkout)]
+        public async Task<IActionResult> Checkout([FromBody] CreditCardDto creditCard)
+        {
+            var chargeResponse = await _orderService.ProcessPayment(
+                creditCard,
+                CommonMethods.GetUserIdFromContext(HttpContext)
+            );
+            if (chargeResponse.Status != "succeeded")
+            {
+                return BadRequest(chargeResponse.Status);
+            }
+            return Ok(chargeResponse.Status);
         }
     }
 }
