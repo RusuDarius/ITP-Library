@@ -16,7 +16,6 @@ namespace ITPLibrary.Core.Services
         private readonly IShoppingCartRepository _shoppingCartRepository;
         private readonly IOrderRepository _orderRepository;
         private readonly IMapper _mapper;
-        private readonly PaymentConfigUtility _stripeConfig;
         private readonly IOrderItemRepository _orderItemRepository;
 
         public OrderService(
@@ -30,7 +29,6 @@ namespace ITPLibrary.Core.Services
             _shoppingCartRepository = shoppingCartRepository;
             _orderRepository = orderRepository;
             _mapper = mapper;
-            _stripeConfig = stripe;
             _orderItemRepository = (IOrderItemRepository?)orderItemRepository!;
         }
 
